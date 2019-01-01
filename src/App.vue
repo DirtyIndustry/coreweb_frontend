@@ -32,4 +32,10 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+/* Mobile Styles */
+@media only screen and (max-width: 500px) {
+  #nav {
+    display: none;
+  }
+}
 </style>

@@ -7,11 +7,17 @@
                 <div class="center-panel"></div>
                 <div class="login-panel">
                     <div class="separator-vertical"></div>
-                    <el-input>
-                        <div slot="prepend" class="fas fa-user"></div>
+                    <div class="separator-vertical"></div>
+                    <el-input class="input" clearable>
+                        <i slot="prepend" class="fas fa-user"></i>
+                    </el-input>
+                    <div class="separator-vertical-small"></div>
+                    <el-input class="input" clearable>
+                        <i slot="prepend" class="fas fa-unlock-alt"></i>
                     </el-input>
                     <div class="separator-vertical"></div>
-                    <el-input></el-input>
+                    <div class="separator-vertical-small"></div>
+                    <el-button type="primary" class="input">登录</el-button>
                 </div>
             </div>
         </div>
@@ -34,28 +40,45 @@ private mounted() {
 </script>
 
 <style scoped>
+@import "../assets/fontawesome/css/all.min.css";
 .separator-vertical {
     height: 10%;
 }
+.separator-vertical-small {
+    height: 5%;
+}
 /* Mobile Styles */
 @media only screen and (max-width: 500px) {
-    body {
+    .background-pic {
         background-color: lightblue;
-    }
-    .page-body {
-        border: 1px solid #000;
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 100vw;
+        background-image: url('/img/bg01.jpg');
+        background-attachment: fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        background-size: cover;
+        z-index: -1;
     }
     .header {
-        height: 100px;
+        height: 80px;
     }
     .footer {
-        height: 100px;
+        height: 80px;
+    }
+    .content {
+        background-color: rgba(255, 255, 255, 0.3);
     }
     .login-panel {
-        border: 1px solid #000;
-        height: 450px;
+        height: 300px;
         width: 90%;
         margin: auto;
+    }
+    .input {
+        width: 100%;
     }
 }
 /* Desktop Styles */
@@ -66,7 +89,7 @@ private mounted() {
         top: 0;
         height: 100vh;
         width: 100vw;
-        background-image: url('/img/bg01.jpg');
+        background-image: url('/img/bg02.jpg');
         background-attachment: fixed;
         -webkit-background-size: cover;
         -moz-background-size: cover;
@@ -84,16 +107,19 @@ private mounted() {
         height: 450px;
         margin: auto;
     }
-    .center-panel {
+    /* .center-panel {
         height: 450px;
         width: 600px;
         float: left;
-    }
+    } */
     .login-panel {
         height: 450px;
         width: 400px;
         background-color: #f2f2f2;
-        float: left;
+        float: right;
+    }
+    .input {
+        width: 90%;
     }
 }
 </style>
