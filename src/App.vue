@@ -1,15 +1,11 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <div>
-      <p>
-        If Element is successfully added to this project, you'll see an
-        <code v-text="'<el-button>'"></code>
-        below
-      </p>
-      <el-button>el-button</el-button>
+    <div id="nav">
+      <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link>
+      <router-link to="/login">Login</router-link>
     </div>
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <router-view/>
   </div>
 </template>
 
@@ -20,6 +16,9 @@ export default {
   name: 'app',
   components: {
     HelloWorld
+  },
+  beforeCreate() {
+    
   }
 }
 </script>
