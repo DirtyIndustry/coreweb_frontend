@@ -7,7 +7,9 @@
                 <div class="center-panel"></div>
                 <div class="login-panel">
                     <div class="separator-vertical"></div>
-                    <el-input></el-input>
+                    <el-input>
+                        <div slot="prepend" class="fas fa-user"></div>
+                    </el-input>
                     <div class="separator-vertical"></div>
                     <el-input></el-input>
                 </div>
