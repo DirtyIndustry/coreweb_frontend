@@ -5,27 +5,7 @@
         <div class="content">
             <div class="content-inner">
                 <div class="center-panel"></div>
-                <el-form class="login-panel" ref="loginform" :model="logindata" :rules="loginrules" label-width="0">
-                    <div class="separator-vertical"></div>
-                    <div class="separator-vertical"></div>
-                    <el-form-item prop="userName" class="input">
-                        <el-input v-model="logindata.userName" clearable>
-                            <i slot="prefix" class="el-input__icon fas fa-user"></i>
-                        </el-input>
-                    </el-form-item>
-                    <div class="separator-vertical-small"></div>
-                    <el-form-item prop="password" class="input">
-                        <el-input :type="passwordinputtype" v-model="logindata.password">
-                            <i slot="prefix" class="el-input__icon fas fa-unlock-alt"></i>
-                            <i slot="suffix" class="el-input__icon far eye-icon" :class="eyeiconclass" @mousedown="onEyePress" @mouseup="onEyeRelease"></i>
-                        </el-input>
-                    </el-form-item>
-                    <div class="separator-vertical"></div>
-                    <div class="separator-vertical-small"></div>
-                    <el-form-item>
-                        <el-button type="primary" class="input" @click="submitForm('loginform')">登录</el-button>
-                    </el-form-item>
-                </el-form>
+                <LoginBoard :loginValid="loginValid" @submit="onLoginSubmit" @set-valid="onSetValid"></LoginBoard>
             </div>
         </div>
         <div class="footer"></div>
@@ -34,9 +14,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { ElForm } from 'element-ui/types/form';
 import LoginBoard from '@/components/LoginBoard.vue'
+import LoginDto from '@/types/LoginDto'
 import Cookie from '@/utils/cookie'
+import Utils from '@/utils/utils'
+import Axios from 'axios'
 
 @Component({
     components: {
@@ -44,36 +26,22 @@ import Cookie from '@/utils/cookie'
     }
 })
 export default class Login extends Vue {
-private eyeiconclass = 'fa-eye-slash'
-private passwordinputtype = 'password'
-private logindata = {
-    userName: '',
-    password: ''
-}
-private loginrules = {
-    userName: [{required: true, message: '请输入用户名', trigger: 'blur'}],
-    password: [{required: true, message: '请输入密码', trigger: 'blur'}]
-}
-private submitForm(formname: string) {
-    (this.$refs[formname] as ElForm).validate((valid) => {
-        if (valid) {
-            alert('submit')
-        } else {
-            console.log('error submit')
-            return false
+private loginValid = true
+private onLoginSubmit(arg: LoginDto) {
+    console.log(arg)
+    Axios.post(Utils.hosturl + '/api/token', arg)
+    .then((res) => {
+        console.log(res)
+    })
+    .catch((err) => {
+        console.log(err.response)
+        if (err.response.status === 400) {
+            this.loginValid = false
         }
     })
 }
-private onEyePress(e: any) {
-    console.log(e)
-    if (e.buttons === 1) {
-        this.eyeiconclass = 'fa-eye'
-        this.passwordinputtype = 'text'
-    }
-}
-private onEyeRelease(e: any) {
-    this.eyeiconclass = 'fa-eye-slash'
-    this.passwordinputtype = 'password'
+private onSetValid(value: boolean) {
+    this.loginValid = value
 }
 private mounted() {
     // Cookie.set('trycookie', 'cookievalue', 0)
@@ -85,15 +53,7 @@ private mounted() {
 
 <style scoped>
 @import "../assets/fontawesome/css/all.min.css";
-.separator-vertical {
-    height: 10%;
-}
-.separator-vertical-small {
-    height: 5%;
-}
-.eye-icon:hover {
-    color: #000;
-}
+
 /* Mobile Styles */
 @media only screen and (max-width: 500px) {
     .background-pic {
@@ -118,14 +78,6 @@ private mounted() {
     }
     .content {
         background-color: rgba(255, 255, 255, 0.3);
-    }
-    .login-panel {
-        height: 300px;
-        width: 90%;
-        margin: auto;
-    }
-    .input {
-        width: 100%;
     }
 }
 /* Desktop Styles */
@@ -159,15 +111,5 @@ private mounted() {
         width: 600px;
         float: left;
     } */
-    .login-panel {
-        height: 450px;
-        width: 400px;
-        background-color: #ffffff;
-        float: right;
-    }
-    .input {
-        width: 90%;
-        margin: auto;
-    }
 }
 </style>
