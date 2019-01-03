@@ -30,7 +30,6 @@ import { ElForm } from 'element-ui/types/form'
 import { ElInput } from 'element-ui/types/input'
 import Axios from 'axios'
 import LoginDto from '@/types/LoginDto'
-import VueRouter from 'vue-router';
 
 @Component
 export default class LoginBoard extends Vue {
@@ -57,6 +56,7 @@ export default class LoginBoard extends Vue {
                 Axios.post(this.loginurl, this.logindata)
                 .then((res) => {
                     console.log(res)
+                    this.$store.dispatch('setToken', res.data)
                     this.$router.push(this.successurl)
                 })
                 .catch((err) => {

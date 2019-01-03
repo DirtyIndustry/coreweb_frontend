@@ -1,7 +1,9 @@
-"use strict";
+'use strict'
 
-import Vue from 'vue';
-import axios from "axios";
+import Vue from 'vue'
+import axios from 'axios'
+import store from '@/store'
+import router from '@/router'
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -12,50 +14,60 @@ let config = {
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
   // timeout: 60 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
-};
+}
 
-const _axios = axios.create(config);
+const _axios = axios.create(config)
 
 _axios.interceptors.request.use(
   function(config) {
     // Do something before request is sent
-    return config;
+    if (store.state.token !== '') {
+      config.headers.Authorization = 'Bearer ' + store.state.token
+    }
+    return config
   },
   function(error) {
     // Do something with request error
-    return Promise.reject(error);
+    return Promise.reject(error)
   }
-);
+)
 
 // Add a response interceptor
 _axios.interceptors.response.use(
   function(response) {
     // Do something with response data
-    return response;
+    return response
   },
   function(error) {
     // Do something with response error
-    return Promise.reject(error);
+    if (error.response.status === 401) {
+      store.dispatch('setToken', '')
+      router.replace({
+        path: 'login',
+        query: {redirect: router.currentRoute.fullPath}
+      })
+    }
+    return Promise.reject(error)
   }
-);
+)
 
 Plugin.install = function(Vue, options) {
-  Vue.axios = _axios;
-  window.axios = _axios;
+  Vue.axios = _axios
+  window.axios = _axios
   Object.defineProperties(Vue.prototype, {
     axios: {
       get() {
-        return _axios;
+        return _axios
       }
     },
     $axios: {
       get() {
-        return _axios;
+        return _axios
       }
-    },
-  });
-};
+    }
+  })
+}
 
 Vue.use(Plugin)
 
-export default Plugin;
+export default Plugin
