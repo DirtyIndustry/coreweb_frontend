@@ -5,7 +5,7 @@
         <div class="content">
             <div class="content-inner">
                 <div class="center-panel"></div>
-                <LoginBoard :loginValid="loginValid" @submit="onLoginSubmit" @set-valid="onSetValid"></LoginBoard>
+                <LoginBoard :loginurl="loginurl" :successurl="successurl"></LoginBoard>
             </div>
         </div>
         <div class="footer"></div>
@@ -26,23 +26,8 @@ import Axios from 'axios'
     }
 })
 export default class Login extends Vue {
-private loginValid = true
-private onLoginSubmit(arg: LoginDto) {
-    console.log(arg)
-    Axios.post(Utils.hosturl + '/api/token', arg)
-    .then((res) => {
-        console.log(res)
-    })
-    .catch((err) => {
-        console.log(err.response)
-        if (err.response.status === 400) {
-            this.loginValid = false
-        }
-    })
-}
-private onSetValid(value: boolean) {
-    this.loginValid = value
-}
+get loginurl() { return Utils.hosturl + '/api/token' }
+private successurl = '/home'
 private mounted() {
     // Cookie.set('trycookie', 'cookievalue', 0)
     // console.log(Cookie.get('trycookie'))

@@ -3,13 +3,14 @@
     <div class="separator-vertical"></div>
     <div class="separator-vertical"></div>
     <el-form-item prop="userName" class="input">
-        <el-input v-model="logindata.userName" clearable @focus="onInputfocused">
+        <el-input v-model="logindata.userName" clearable @focus="onInputfocused" @keyup.enter.native="onUserNameEnter">
             <i slot="prefix" class="el-input__icon fas fa-user"></i>
         </el-input>
     </el-form-item>
     <div class="separator-vertical-small"></div>
     <el-form-item prop="password" class="input">
-        <el-input :type="passwordinputtype" v-model="logindata.password" @focus="onInputfocused" @blur="onInputBlur">
+        <el-input ref="passwordinput" :type="passwordinputtype" v-model="logindata.password"
+        @focus="onInputfocused" @blur="onInputBlur" @keyup.enter.native="onPasswordEnter">
             <i slot="prefix" class="el-input__icon fas fa-unlock-alt"></i>
             <i slot="suffix" class="el-input__icon far eye-icon" :class="eyeiconclass" @mousedown="onEyePress"
                 @mouseup="onEyeRelease"></i>
@@ -18,7 +19,7 @@
     <div class="separator-vertical"></div>
     <div class="separator-vertical-small"></div>
     <el-form-item>
-        <el-button type="primary" class="input" @click="submitForm('loginform')">登录</el-button>
+        <el-button type="primary" class="input" :loading="isLogingin" @click="submitForm('loginform')">登录</el-button>
     </el-form-item>
 </el-form>
 </template>
@@ -26,11 +27,17 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit, Watch } from 'vue-property-decorator'
 import { ElForm } from 'element-ui/types/form'
+import { ElInput } from 'element-ui/types/input'
+import Axios from 'axios'
 import LoginDto from '@/types/LoginDto'
+import VueRouter from 'vue-router';
 
 @Component
 export default class LoginBoard extends Vue {
-    @Prop({default: true}) private loginValid!: boolean
+    @Prop({default: ''}) private loginurl!: string
+    @Prop({default: ''}) private successurl!: string
+    private loginValid = true
+    private isLogingin = false
     private eyeiconclass = 'fa-eye-slash'
     private passwordinputtype = 'password'
     private logindata = new LoginDto()
@@ -39,14 +46,6 @@ export default class LoginBoard extends Vue {
         password: [{required: true, message: '请输入密码', trigger: 'blur'},
             {validator: this.isLoginValid, trigger: 'blur'}]
     }
-    @Emit()
-    private submit() {
-        return this.logindata
-    }
-    @Emit()
-    private setValid(value: boolean) {
-        return value
-    }
     @Watch('loginValid')
     private onLoginValidChanged(val: boolean, oldVal: boolean) {
         this.validateForm()
@@ -54,7 +53,21 @@ export default class LoginBoard extends Vue {
     private submitForm(formname: string) {
         (this.$refs[formname] as ElForm).validate((valid) => {
             if (valid) {
-                this.submit()
+                this.isLogingin = true
+                Axios.post(this.loginurl, this.logindata)
+                .then((res) => {
+                    console.log(res)
+                    this.$router.push(this.successurl)
+                })
+                .catch((err) => {
+                    console.error(err.response)
+                    if (err.response.status === 400) {
+                        this.loginValid = false
+                    }
+                })
+                .finally(() => {
+                    this.isLogingin = false
+                })
             }
         })
     }
@@ -82,15 +95,22 @@ export default class LoginBoard extends Vue {
     }
     private onInputfocused(e: FocusEvent) {
         if (this.logindata.userName !== '' && this.logindata.password !== '') {
-            this.setValid(true)
+            this.loginValid = true
             this.validateForm()
         }
     }
     private onInputBlur(e: FocusEvent) {
         if (this.logindata.userName !== '' && this.logindata.password !== '') {
-            this.setValid(true)
+            this.loginValid = true
             this.validateForm()
         }
+    }
+    private onUserNameEnter(e: KeyboardEvent) {
+        (this.$refs.passwordinput as ElInput).focus()
+    }
+    private onPasswordEnter(e: KeyboardEvent) {
+        (this.$refs.passwordinput as ElInput).blur()
+        this.submitForm('loginform')
     }
 }
 </script>
