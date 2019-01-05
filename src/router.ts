@@ -1,15 +1,14 @@
 import Vue from 'vue'
-import Router, { Route, Location } from 'vue-router'
+import Router from 'vue-router'
 import Home from './views/Home.vue'
-import cookie from './utils/cookie'
 
 Vue.use(Router)
 
-const guard = (to: Route,
-               from: Route,
-               next: (to?: string|false|void|Location|((vm: Vue) => any)|undefined) => void) => {
-  next()
-}
+// const guard = (to: Route,
+//                from: Route,
+//                next: (to?: string|false|void|Location|((vm: Vue) => any)|undefined) => void) => {
+//   next()
+// }
 
 export default new Router({
   mode: 'history',
