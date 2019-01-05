@@ -1,4 +1,4 @@
-import Axios, { AxiosRequestConfig, AxiosError, AxiosPromise, AxiosResponse } from 'axios'
+import Axios, { AxiosRequestConfig, AxiosPromise, AxiosResponse } from 'axios'
 import router from '@/router'
 import Cookie from './cookie'
 import LoginDto from '@/types/LoginDto'
