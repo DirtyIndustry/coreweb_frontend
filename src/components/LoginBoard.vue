@@ -16,7 +16,10 @@
                 @mouseup="onEyeRelease"></i>
         </el-input>
     </el-form-item>
-    <div class="separator-vertical"></div>
+    <div class="separator-vertical-small"></div>
+    <div class="separator-vertical-small input">
+        <el-checkbox class="rememberme-check" v-model="rememberMe">记住我</el-checkbox>
+    </div>
     <div class="separator-vertical-small"></div>
     <el-form-item>
         <el-button type="primary" class="input" :loading="isLogingin" @click="submitForm('loginform')">登录</el-button>
@@ -28,8 +31,8 @@
 import { Component, Vue, Prop, Emit, Watch } from 'vue-property-decorator'
 import { ElForm } from 'element-ui/types/form'
 import { ElInput } from 'element-ui/types/input'
-import Axios from 'axios'
 import Cookie from '@/utils/cookie'
+import Http from '@/utils/http'
 import LoginDto from '@/types/LoginDto'
 
 @Component
@@ -38,6 +41,7 @@ export default class LoginBoard extends Vue {
     @Prop({default: ''}) private successurl!: string
     private loginValid = true
     private isLogingin = false
+    private rememberMe = false
     private eyeiconclass = 'fa-eye-slash'
     private passwordinputtype = 'password'
     private logindata = new LoginDto()
@@ -54,15 +58,18 @@ export default class LoginBoard extends Vue {
         (this.$refs[formname] as ElForm).validate((valid) => {
             if (valid) {
                 this.isLogingin = true
-                Axios.post(this.loginurl, this.logindata)
+                Http.Post(this.loginurl, this.logindata)
                 .then((res) => {
-                    console.log(res)
-                    // this.$store.dispatch('setToken', res.data)
-                    Cookie.set('Authorization', 'Bearer ' + res.data, 0)
+                    Cookie.set('Authorization', res.data, 0)
+                    if (this.rememberMe) {
+                        const login = new LoginDto()
+                        login.userName = escape(this.logindata.userName)
+                        login.password = escape(this.logindata.password)
+                        Cookie.set('Login', escape(JSON.stringify(login)), 30)
+                    }
                     this.$router.push(this.successurl)
                 })
                 .catch((err) => {
-                    console.error(err.response)
                     if (err.response.status === 400) {
                         this.loginValid = false
                     }
@@ -117,7 +124,7 @@ export default class LoginBoard extends Vue {
 }
 </script>
 
-<style>
+<style Scoped>
 @import "../assets/fontawesome/css/all.min.css";
 
 .separator-vertical {
@@ -138,5 +145,9 @@ export default class LoginBoard extends Vue {
 .input {
     width: 90%;
     margin: auto;
+}
+.rememberme-check {
+    float: left;
+    left: 10px;
 }
 </style>

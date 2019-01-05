@@ -15,10 +15,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import LoginBoard from '@/components/LoginBoard.vue'
-import LoginDto from '@/types/LoginDto'
-import Cookie from '@/utils/cookie'
-import Utils from '@/utils/utils'
-import Axios from 'axios'
+import Http from '@/utils/http'
 
 @Component({
     components: {
@@ -26,7 +23,7 @@ import Axios from 'axios'
     }
 })
 export default class Login extends Vue {
-get loginurl() { return Utils.hosturl + '/api/token' }
+get loginurl() { return Http.hosturl + '/api/token' }
 private successurl = '/home'
 private mounted() {
     // Cookie.set('trycookie', 'cookievalue', 0)

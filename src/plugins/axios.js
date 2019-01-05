@@ -2,7 +2,7 @@
 
 import Vue from 'vue'
 import axios from 'axios'
-import store from '@/store'
+import Cookie from '@/utils/cookie'
 import router from '@/router'
 
 // Full config:  https://github.com/axios/axios#request-config
@@ -21,9 +21,9 @@ const _axios = axios.create(config)
 _axios.interceptors.request.use(
   function(config) {
     // Do something before request is sent
-    // if (store.state.token !== '') {
-    //   config.headers.Authorization = 'Bearer ' + store.state.token
-    // }
+    if (Cookie.get('Authorization')) {
+      config.headers.Authorization = 'Bearer ' + Cookie.get('Authorization')
+    }
     return config
   },
   function(error) {
@@ -41,7 +41,7 @@ _axios.interceptors.response.use(
   function(error) {
     // Do something with response error
     if (error.response.status === 401) {
-      // store.dispatch('setToken', '')
+      Cookie.del('Authorization')
       router.replace({
         path: '/login',
         query: {redirect: router.currentRoute.fullPath}
