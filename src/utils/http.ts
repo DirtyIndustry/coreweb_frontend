@@ -72,23 +72,27 @@ const Execute = (action: (url: string, data?: any, config?: AxiosRequestConfig |
             resolve(res)
         })
         .catch((err) => {
-            if (err.response.status === 401) {
-                ReLogin()
-                .then(() => {
-                    action(url, data, configure)
-                    .then((res2) => {
-                        resolve(res2)
+            if (err.response) {
+                if (err.response.status === 401) {
+                    ReLogin()
+                    .then(() => {
+                        action(url, data, configure)
+                        .then((res2) => {
+                            resolve(res2)
+                        })
+                        .catch((err2) => {
+                            reject(err2)
+                        })
                     })
-                    .catch((err2) => {
-                        reject(err2)
+                    .catch((errRelogin) => {
+                        reject(errRelogin)
                     })
-                })
-                .catch((errRelogin) => {
-                    reject(errRelogin)
-                })
-            } else if (err.response.status === 403) {
-                Cookie.del('Authorization')
-                RedirectToLogin()
+                } else if (err.response.status === 403) {
+                    Cookie.del('Authorization')
+                    RedirectToLogin()
+                } else {
+                    reject(err)
+                }
             } else {
                 reject(err)
             }

@@ -24,7 +24,8 @@ export default new Router({
       // beforeEnter: guard,
       component: () => import ('./views/Login.vue'),
       meta: {
-        title: '登录'
+        title: '登录',
+        requireToken: false
       }
     },
     {
@@ -33,7 +34,17 @@ export default new Router({
       // beforeEnter: guard,
       component: Home,
       meta: {
-        title: '首页'
+        title: '首页',
+        requireToken: true
+      }
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('./views/CompanyRegister.vue'),
+      meta: {
+        title: '新公司注册',
+        requireToken: false
       }
     },
     {
@@ -45,7 +56,8 @@ export default new Router({
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
       meta: {
-        title: '关于'
+        title: '关于',
+        requireToken: true
       }
     },
     { /* Not Found 路由，必须是最后一个路由 */

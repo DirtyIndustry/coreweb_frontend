@@ -5,7 +5,7 @@
         <div class="content">
             <div class="content-inner">
                 <div class="center-panel"></div>
-                <LoginBoard :loginurl="loginurl" :successurl="successurl"></LoginBoard>
+                <LoginBoard :loginurl="loginurl" :successurl="successurl" :registerurl="registerurl"></LoginBoard>
             </div>
         </div>
         <div class="footer"></div>
@@ -25,6 +25,8 @@ import Http from '@/utils/http'
 export default class Login extends Vue {
 get loginurl() { return Http.hosturl + '/api/token' }
 private successurl = '/home'
+private registerurl = '/register'
+private findpasswordurl = '/findpassword'
 private mounted() {
     // Cookie.set('trycookie', 'cookievalue', 0)
     // console.log(Cookie.get('trycookie'))

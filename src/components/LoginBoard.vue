@@ -24,6 +24,10 @@
     <el-form-item>
         <el-button type="primary" class="input" :loading="isLogingin" @click="submitForm('loginform')">登录</el-button>
     </el-form-item>
+    <!-- <div class="separator-vertical-small"></div> -->
+    <div class="separator-vertical-small input">
+        <router-link class="register-link" :to="registerurl">新公司注册</router-link>
+    </div>
 </el-form>
 </template>
 
@@ -39,6 +43,8 @@ import LoginDto from '@/types/LoginDto'
 export default class LoginBoard extends Vue {
     @Prop({default: ''}) private loginurl!: string
     @Prop({default: ''}) private successurl!: string
+    @Prop({default: ''}) private registerurl!: string
+    @Prop({default: ''}) private findpasswordurl!: string
     private loginValid = true
     private isLogingin = false
     private rememberMe = false
@@ -75,8 +81,10 @@ export default class LoginBoard extends Vue {
                     }
                 })
                 .catch((err) => {
-                    if (err.response.status === 400) {
-                        this.loginValid = false
+                    if (err.response) {
+                        if (err.response.status === 400) {
+                            this.loginValid = false
+                        }
                     }
                 })
                 .finally(() => {
@@ -154,5 +162,9 @@ export default class LoginBoard extends Vue {
 .rememberme-check {
     float: left;
     left: 10px;
+}
+.register-link {
+    float: left;
+    margin-left: 10px;
 }
 </style>
