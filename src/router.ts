@@ -1,8 +1,15 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import Router, { Route, Location } from 'vue-router'
 import Home from './views/Home.vue'
+import cookie from './utils/cookie'
 
 Vue.use(Router)
+
+const guard = (to: Route,
+               from: Route,
+               next: (to?: string|false|void|Location|((vm: Vue) => any)|undefined) => void) => {
+  next()
+}
 
 export default new Router({
   mode: 'history',
@@ -15,6 +22,7 @@ export default new Router({
     {
       path: '/login',
       name: 'login',
+      // beforeEnter: guard,
       component: () => import ('./views/Login.vue'),
       meta: {
         title: '登录'
@@ -23,6 +31,7 @@ export default new Router({
     {
       path: '/home',
       name: 'home',
+      // beforeEnter: guard,
       component: Home,
       meta: {
         title: '首页'
@@ -31,6 +40,7 @@ export default new Router({
     {
       path: '/about',
       name: 'about',
+      // beforeEnter: guard,
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.

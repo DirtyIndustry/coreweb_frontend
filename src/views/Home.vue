@@ -11,8 +11,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
 import Http from '@/utils/http'
-import cookie from '@/utils/cookie';
-import { AxiosError } from 'axios';
+import cookie from '@/utils/cookie'
 
 @Component({
   components: {
@@ -36,6 +35,9 @@ private onLogout(e: MouseEvent) {
   this.$axios.delete(Http.hosturl + '/api/token')
   .then((res) => {
     console.log(res)
+    cookie.del('Authorization')
+    cookie.del('Login')
+    this.$router.replace('/login')
   })
   .catch((err) => {
     console.log(err)

@@ -44,14 +44,14 @@ const ReLogin = () => {
             logindto.userName = unescape(logindto.userName)
             logindto.password = unescape(logindto.password)
             axios.post(hosturl + '/api/token', logindto)
-                .then((respost) => {
-                    Cookie.set('Authorization', respost.data, 0)
-                    resolve()
-                })
-                .catch((errpost) => {
-                    RedirectToLogin()
-                    reject(errpost)
-                })
+            .then((respost) => {
+                Cookie.set('Authorization', respost.data, 0)
+                resolve()
+            })
+            .catch((errpost) => {
+                RedirectToLogin()
+                reject(errpost)
+            })
         }
     })
 }
@@ -68,28 +68,31 @@ const Execute = (action: (url: string, data?: any, config?: AxiosRequestConfig |
                  configure?: AxiosRequestConfig | undefined): Promise<AxiosResponse> => {
     return new Promise((resolve, reject) => {
         action(url, data, configure)
-            .then((res) => {
-                resolve(res)
-            })
-            .catch((err) => {
-                if (err.response.status === 401) {
-                    ReLogin()
-                        .then(() => {
-                            action(url, data, configure)
-                                .then((res2) => {
-                                    resolve(res2)
-                                })
-                                .catch((err2) => {
-                                    reject(err2)
-                                })
-                        })
-                        .catch((errRelogin) => {
-                            reject(errRelogin)
-                        })
-                } else {
-                    reject(err)
-                }
-            })
+        .then((res) => {
+            resolve(res)
+        })
+        .catch((err) => {
+            if (err.response.status === 401) {
+                ReLogin()
+                .then(() => {
+                    action(url, data, configure)
+                    .then((res2) => {
+                        resolve(res2)
+                    })
+                    .catch((err2) => {
+                        reject(err2)
+                    })
+                })
+                .catch((errRelogin) => {
+                    reject(errRelogin)
+                })
+            } else if (err.response.status === 403) {
+                Cookie.del('Authorization')
+                RedirectToLogin()
+            } else {
+                reject(err)
+            }
+        })
     })
 }
 

@@ -67,7 +67,12 @@ export default class LoginBoard extends Vue {
                         login.password = escape(this.logindata.password)
                         Cookie.set('Login', escape(JSON.stringify(login)), 30)
                     }
-                    this.$router.push(this.successurl)
+                    const from = this.$route.query.redirect
+                    if (typeof(from) === 'string' && from !== '') {
+                        this.$router.push(from)
+                    } else {
+                        this.$router.push(this.successurl)
+                    }
                 })
                 .catch((err) => {
                     if (err.response.status === 400) {
