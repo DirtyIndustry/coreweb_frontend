@@ -29,6 +29,7 @@ import { Component, Vue, Prop, Emit, Watch } from 'vue-property-decorator'
 import { ElForm } from 'element-ui/types/form'
 import { ElInput } from 'element-ui/types/input'
 import Axios from 'axios'
+import Cookie from '@/utils/cookie'
 import LoginDto from '@/types/LoginDto'
 
 @Component
@@ -56,7 +57,8 @@ export default class LoginBoard extends Vue {
                 Axios.post(this.loginurl, this.logindata)
                 .then((res) => {
                     console.log(res)
-                    this.$store.dispatch('setToken', res.data)
+                    // this.$store.dispatch('setToken', res.data)
+                    Cookie.set('Authorization', 'Bearer ' + res.data, 0)
                     this.$router.push(this.successurl)
                 })
                 .catch((err) => {

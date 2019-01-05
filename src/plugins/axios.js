@@ -21,9 +21,9 @@ const _axios = axios.create(config)
 _axios.interceptors.request.use(
   function(config) {
     // Do something before request is sent
-    if (store.state.token !== '') {
-      config.headers.Authorization = 'Bearer ' + store.state.token
-    }
+    // if (store.state.token !== '') {
+    //   config.headers.Authorization = 'Bearer ' + store.state.token
+    // }
     return config
   },
   function(error) {
@@ -41,9 +41,9 @@ _axios.interceptors.response.use(
   function(error) {
     // Do something with response error
     if (error.response.status === 401) {
-      store.dispatch('setToken', '')
+      // store.dispatch('setToken', '')
       router.replace({
-        path: 'login',
+        path: '/login',
         query: {redirect: router.currentRoute.fullPath}
       })
     }
