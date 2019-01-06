@@ -70,12 +70,12 @@ export default class Register3 extends Vue {
                     type: 'success',
                     showClose: false,
                     showConfirmButton: false,
-                    showCancelButton: false,
+                    showCancelButton: false
                 })
                 setTimeout(() => {
                     this.$msgbox.close()
                     this.$router.push('/login')
-                }, 3000);
+                }, 3000)
             })
             .catch((err) => {
                 console.error(err)
