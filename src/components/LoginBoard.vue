@@ -1,34 +1,57 @@
 <template>
-<el-form class="login-panel" ref="loginform" :model="logindata" :rules="loginrules" label-width="0">
-    <div class="separator-vertical"></div>
-    <div class="separator-vertical"></div>
-    <el-form-item prop="userName" class="input">
-        <el-input v-model="logindata.userName" clearable @focus="onInputfocused" @keyup.enter.native="onUserNameEnter">
-            <i slot="prefix" class="el-input__icon fas fa-user"></i>
-        </el-input>
-    </el-form-item>
-    <div class="separator-vertical-small"></div>
-    <el-form-item prop="password" class="input">
-        <el-input ref="passwordinput" :type="passwordinputtype" v-model="logindata.password"
-        @focus="onInputfocused" @blur="onInputBlur" @keyup.enter.native="onPasswordEnter">
-            <i slot="prefix" class="el-input__icon fas fa-unlock-alt"></i>
-            <i slot="suffix" class="el-input__icon far eye-icon" :class="eyeiconclass" @mousedown="onEyePress"
-                @mouseup="onEyeRelease"></i>
-        </el-input>
-    </el-form-item>
-    <div class="separator-vertical-small"></div>
-    <div class="separator-vertical-small input">
-        <el-checkbox class="rememberme-check" v-model="rememberMe">记住我</el-checkbox>
-    </div>
-    <div class="separator-vertical-small"></div>
-    <el-form-item>
-        <el-button type="primary" class="input" :loading="isLogingin" @click="submitForm('loginform')">登录</el-button>
-    </el-form-item>
-    <!-- <div class="separator-vertical-small"></div> -->
-    <div class="separator-vertical-small input">
-        <router-link class="register-link" :to="registerurl">新公司注册</router-link>
-    </div>
-</el-form>
+    <el-form class="login-panel"
+             ref="loginform"
+             :model="logindata"
+             :rules="loginrules"
+             label-width="0">
+        <div class="separator-vertical"></div>
+        <div class="separator-vertical"></div>
+        <el-form-item prop="userName"
+                      class="input">
+            <el-input v-model="logindata.userName"
+                      clearable
+                      @focus="onInputfocused"
+                      @keyup.enter.native="onUserNameEnter">
+                <i slot="prefix"
+                   class="el-input__icon fas fa-user"></i>
+            </el-input>
+        </el-form-item>
+        <div class="separator-vertical-small"></div>
+        <el-form-item prop="password"
+                      class="input">
+            <el-input ref="passwordinput"
+                      :type="passwordinputtype"
+                      v-model="logindata.password"
+                      @focus="onInputfocused"
+                      @blur="onInputBlur"
+                      @keyup.enter.native="onPasswordEnter">
+                <i slot="prefix"
+                   class="el-input__icon fas fa-unlock-alt"></i>
+                <i slot="suffix"
+                   class="el-input__icon far eye-icon"
+                   :class="eyeiconclass"
+                   @mousedown="onEyePress"
+                   @mouseup="onEyeRelease"></i>
+            </el-input>
+        </el-form-item>
+        <div class="separator-vertical-small"></div>
+        <div class="separator-vertical-small input">
+            <el-checkbox class="rememberme-check"
+                         v-model="rememberMe">记住我</el-checkbox>
+        </div>
+        <div class="separator-vertical-small"></div>
+        <el-form-item>
+            <el-button type="primary"
+                       class="input"
+                       :loading="isLogingin"
+                       @click="submitForm('loginform')">登录</el-button>
+        </el-form-item>
+        <!-- <div class="separator-vertical-small"></div> -->
+        <div class="separator-vertical-small input">
+            <router-link class="register-link"
+                         :to="registerurl">新公司注册</router-link>
+        </div>
+    </el-form>
 </template>
 
 <script lang="ts">
@@ -41,10 +64,10 @@ import LoginDto from '@/types/LoginDto'
 
 @Component
 export default class LoginBoard extends Vue {
-    @Prop({default: ''}) private loginurl!: string
-    @Prop({default: ''}) private successurl!: string
-    @Prop({default: ''}) private registerurl!: string
-    @Prop({default: ''}) private findpasswordurl!: string
+    @Prop({ default: '' }) private loginurl!: string
+    @Prop({ default: '' }) private successurl!: string
+    @Prop({ default: '' }) private registerurl!: string
+    @Prop({ default: '' }) private findpasswordurl!: string
     private loginValid = true
     private isLogingin = false
     private rememberMe = false
@@ -52,9 +75,9 @@ export default class LoginBoard extends Vue {
     private passwordinputtype = 'password'
     private logindata = new LoginDto()
     private loginrules = {
-        userName: [{required: true, message: '请输入用户名', trigger: 'blur'}],
-        password: [{required: true, message: '请输入密码', trigger: 'blur'},
-            {validator: this.isLoginValid, trigger: 'blur'}]
+        userName: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' },
+        { validator: this.isLoginValid, trigger: 'blur' }]
     }
     @Watch('loginValid')
     private onLoginValidChanged(val: boolean, oldVal: boolean) {
@@ -65,31 +88,31 @@ export default class LoginBoard extends Vue {
             if (valid) {
                 this.isLogingin = true
                 Http.Post(this.loginurl, this.logindata)
-                .then((res) => {
-                    Cookie.set('Authorization', res.data, 0)
-                    if (this.rememberMe) {
-                        const login = new LoginDto()
-                        login.userName = escape(this.logindata.userName)
-                        login.password = escape(this.logindata.password)
-                        Cookie.set('Login', escape(JSON.stringify(login)), 30)
-                    }
-                    const from = this.$route.query.redirect
-                    if (typeof(from) === 'string' && from !== '') {
-                        this.$router.push(from)
-                    } else {
-                        this.$router.push(this.successurl)
-                    }
-                })
-                .catch((err) => {
-                    if (err.response) {
-                        if (err.response.status === 400) {
-                            this.loginValid = false
+                    .then((res) => {
+                        Cookie.set('Authorization', res.data, 0)
+                        if (this.rememberMe) {
+                            const login = new LoginDto()
+                            login.userName = escape(this.logindata.userName)
+                            login.password = escape(this.logindata.password)
+                            Cookie.set('Login', escape(JSON.stringify(login)), 30)
                         }
-                    }
-                })
-                .finally(() => {
-                    this.isLogingin = false
-                })
+                        const from = this.$route.query.redirect
+                        if (typeof (from) === 'string' && from !== '') {
+                            this.$router.push(from)
+                        } else {
+                            this.$router.push(this.successurl)
+                        }
+                    })
+                    .catch((err) => {
+                        if (err.response) {
+                            if (err.response.status === 400) {
+                                this.loginValid = false
+                            }
+                        }
+                    })
+                    .finally(() => {
+                        this.isLogingin = false
+                    })
             }
         })
     }
@@ -138,33 +161,33 @@ export default class LoginBoard extends Vue {
 </script>
 
 <style Scoped>
-@import "../assets/fontawesome/css/all.min.css";
+@import '../assets/fontawesome/css/all.min.css';
 
 .separator-vertical {
-    height: 10%;
+  height: 10%;
 }
 .separator-vertical-small {
-    height: 5%;
+  height: 5%;
 }
 .eye-icon:hover {
-    color: #000;
+  color: #000;
 }
 .login-panel {
-    height: 450px;
-    width: 400px;
-    background-color: #ffffff;
-    float: right;
+  height: 450px;
+  width: 400px;
+  background-color: #ffffff;
+  float: right;
 }
 .input {
-    width: 90%;
-    margin: auto;
+  width: 90%;
+  margin: auto;
 }
 .rememberme-check {
-    float: left;
-    left: 10px;
+  float: left;
+  left: 10px;
 }
 .register-link {
-    float: left;
-    margin-left: 10px;
+  float: left;
+  margin-left: 10px;
 }
 </style>

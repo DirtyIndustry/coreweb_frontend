@@ -22,7 +22,7 @@ export default new Router({
       path: '/login',
       name: 'login',
       // beforeEnter: guard,
-      component: () => import ('./views/Login.vue'),
+      component: () => import('./views/Login.vue'),
       meta: {
         title: '登录',
         requireToken: false
@@ -54,13 +54,15 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
+      component: () =>
+        import(/* webpackChunkName: "about" */ './views/About.vue'),
       meta: {
         title: '关于',
         requireToken: true
       }
     },
-    { /* Not Found 路由，必须是最后一个路由 */
+    {
+      /* Not Found 路由，必须是最后一个路由 */
       path: '*',
       component: () => import('./views/NotFound.vue'),
       meta: {
