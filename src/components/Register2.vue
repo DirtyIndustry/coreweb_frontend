@@ -26,12 +26,10 @@
         </el-form>
         <div class="button-panel">
             <div class="button-row">
-                <el-button class="button" type="primary" @click="onPrevClick">上一步</el-button>
+                <el-button class="button" @click="onPrevClick">上一步</el-button>
                 <dir class="separator-button"></dir>
                 <el-button class="button" type="primary" @click="onNextClick">下一步</el-button>
             </div>
-            <div class="separator-vertical"></div>
-            <router-link class="login-link" to="/login">已有账号？请登录</router-link>
         </div>
     </div>
 </template>

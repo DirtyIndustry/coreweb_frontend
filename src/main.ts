@@ -9,7 +9,7 @@ import cookie from './utils/cookie'
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
-  // if (to.fullPath === '/login') {
+  // if (to.path === '/login') {
   //   if (cookie.get('Authorization') !== null) {
   //     window.document.title = '首页'
   //     next('/home')
@@ -17,22 +17,8 @@ router.beforeEach((to, from, next) => {
   //     window.document.title = to.meta.title
   //     next()
   //   }
-  // } else if (cookie.get('Authorization') === null) {
-  //   window.document.title = '登录'
-  //   next('/login')
-  // } else {
-  //   window.document.title = to.meta.title
-  //   next()
-  // }
-  if (to.path === '/login') {
-    if (cookie.get('Authorization') !== null) {
-      window.document.title = '首页'
-      next('/home')
-    } else {
-      window.document.title = to.meta.title
-      next()
-    }
-  } else if (to.meta.requireToken) {
+  // } else
+  if (to.meta.requireToken === true) {
     if (cookie.get('Authorization') === null) {
       window.document.title = '登录'
       next('/login')
@@ -40,7 +26,15 @@ router.beforeEach((to, from, next) => {
       window.document.title = to.meta.title
       next()
     }
-  } else {
+  } else if (to.meta.requireToken === false) {
+    if (cookie.get('Authorization') === null) {
+      window.document.title = to.meta.title
+      next()
+    } else {
+      window.document.title = '首页'
+      next('/home')
+    }
+  } else if (to.meta.requireToken === undefined) {
     window.document.title = to.meta.title
     next()
   }

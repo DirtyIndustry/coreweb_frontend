@@ -83,7 +83,7 @@ export default new Router({
         import(/* webpackChunkName: "about" */ './views/About.vue'),
       meta: {
         title: '关于',
-        requireToken: true
+        requireToken: undefined
       }
     },
     {
