@@ -69,7 +69,7 @@ export default class LoginBoard extends Vue {
                             const login = new LoginDto()
                             login.userName = escape(this.logindata.userName)
                             login.password = escape(this.logindata.password)
-                            Cookie.set('Login', escape(JSON.stringify(login)), 30)
+                            Cookie.encryptSet('Login', escape(JSON.stringify(login)), 30)
                         }
                         const from = this.$route.query.redirect
                         if (typeof (from) === 'string' && from !== '') {

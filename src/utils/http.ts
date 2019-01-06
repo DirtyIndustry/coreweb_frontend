@@ -12,8 +12,9 @@ const axios = Axios.create(config)
 axios.interceptors.request.use(
   (configure) => {
     // Do something before request is sent
-    if (Cookie.get('Authorization')) {
-      configure.headers.Authorization = 'Bearer ' + Cookie.get('Authorization')
+    const auth = Cookie.get('Authorization')
+    if (auth !== null) {
+      configure.headers.Authorization = 'Bearer ' + auth
     }
     return configure
   },
@@ -36,7 +37,7 @@ axios.interceptors.response.use(
 const ReLogin = () => {
   return new Promise((resolve, reject) => {
     Cookie.del('Authorization')
-    const logincookie = Cookie.get('Login')
+    const logincookie = Cookie.decryptGet('Login')
     if (logincookie === null) {
       RedirectToLogin()
     } else {
