@@ -40,12 +40,37 @@ export default new Router({
     },
     {
       path: '/register',
-      name: 'register',
       component: () => import('./views/CompanyRegister.vue'),
       meta: {
         title: '新公司注册',
         requireToken: false
-      }
+      },
+      children: [
+        {
+          path: '',
+          name: 'register',
+          component: () => import('./components/Register1.vue'),
+          meta: { title: '新公司注册', requireToken: false }
+        },
+        {
+          path: 'step1',
+          name: 'registerstep1',
+          component: () => import('./components/Register1.vue'),
+          meta: { title: '新公司注册', requireToken: false }
+        },
+        {
+          path: 'step2',
+          name: 'registerstep2',
+          component: () => import('./components/Register2.vue'),
+          meta: { title: '新公司注册', requireToken: false }
+        },
+        {
+          path: 'step3',
+          name: 'registerstep3',
+          component: () => import('./components/Register3.vue'),
+          meta: { title: '新公司注册', requireToken: false }
+        }
+      ]
     },
     {
       path: '/about',

@@ -1,55 +1,30 @@
 <template>
-    <el-form class="login-panel"
-             ref="loginform"
-             :model="logindata"
-             :rules="loginrules"
-             label-width="0">
+    <el-form class="login-panel" ref="loginform" :model="logindata" :rules="loginrules" label-width="0">
         <div class="separator-vertical"></div>
         <div class="separator-vertical"></div>
-        <el-form-item prop="userName"
-                      class="input">
-            <el-input v-model="logindata.userName"
-                      clearable
-                      @focus="onInputfocused"
-                      @keyup.enter.native="onUserNameEnter">
-                <i slot="prefix"
-                   class="el-input__icon fas fa-user"></i>
+        <el-form-item prop="userName" class="input">
+            <el-input v-model="logindata.userName" clearable @focus="onInputfocused" @keyup.enter.native="onUserNameEnter">
+                <i slot="prefix" class="el-input__icon fas fa-user"></i>
             </el-input>
         </el-form-item>
         <div class="separator-vertical-small"></div>
-        <el-form-item prop="password"
-                      class="input">
-            <el-input ref="passwordinput"
-                      :type="passwordinputtype"
-                      v-model="logindata.password"
-                      @focus="onInputfocused"
-                      @blur="onInputBlur"
-                      @keyup.enter.native="onPasswordEnter">
-                <i slot="prefix"
-                   class="el-input__icon fas fa-unlock-alt"></i>
-                <i slot="suffix"
-                   class="el-input__icon far eye-icon"
-                   :class="eyeiconclass"
-                   @mousedown="onEyePress"
-                   @mouseup="onEyeRelease"></i>
+        <el-form-item prop="password" class="input">
+            <el-input ref="passwordinput" :type="passwordinputtype" v-model="logindata.password" @focus="onInputfocused" @blur="onInputBlur" @keyup.enter.native="onPasswordEnter">
+                <i slot="prefix" class="el-input__icon fas fa-unlock-alt"></i>
+                <i slot="suffix" class="el-input__icon far eye-icon" :class="eyeiconclass" @mousedown="onEyePress" @mouseup="onEyeRelease"></i>
             </el-input>
         </el-form-item>
         <div class="separator-vertical-small"></div>
         <div class="separator-vertical-small input">
-            <el-checkbox class="rememberme-check"
-                         v-model="rememberMe">记住我</el-checkbox>
+            <el-checkbox class="rememberme-check" v-model="rememberMe">记住我</el-checkbox>
         </div>
         <div class="separator-vertical-small"></div>
         <el-form-item>
-            <el-button type="primary"
-                       class="input"
-                       :loading="isLogingin"
-                       @click="submitForm('loginform')">登录</el-button>
+            <el-button type="primary" class="input" :loading="isLogingin" @click="submitForm('loginform')">登录</el-button>
         </el-form-item>
         <!-- <div class="separator-vertical-small"></div> -->
         <div class="separator-vertical-small input">
-            <router-link class="register-link"
-                         :to="registerurl">新公司注册</router-link>
+            <router-link class="register-link" :to="registerurl">新公司注册</router-link>
         </div>
     </el-form>
 </template>

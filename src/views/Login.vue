@@ -40,8 +40,6 @@ export default class Login extends Vue {
 </script>
 
 <style scoped>
-@import '../assets/fontawesome/css/all.min.css';
-
 /* Mobile Styles */
 @media only screen and (max-width: 500px) {
   .background-pic {
