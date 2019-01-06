@@ -6,13 +6,14 @@
                 <el-input v-model="registerData.companyName"></el-input>
             </el-form-item>
             <div class="separator-vertical"></div>
+            <div class="description">公司的英文简称，仅可使用数字、字母和下划线组成。我们将以此做为您专属数据库的名称</div>
             <el-form-item prop="company" label="公司英文简称：">
                 <el-input v-model="registerData.company"></el-input>
             </el-form-item>
-            <div class="description">公司的英文简称，仅可使用数字、字母和下划线组成。我们将以此做为您专属数据库的名称</div>
         </el-form>
         <div class="button-panel">
             <el-button class="button" type="primary" @click="onNextClick">下一步</el-button>
+
             <div class="separator-vertical"></div>
             <router-link class="login-link" to="/login">已有账号？请登录</router-link>
         </div>
@@ -22,8 +23,8 @@
 <script lang="ts">
 import { Component, Vue, Emit, Prop } from 'vue-property-decorator'
 import CompanyRegisterDto from '@/types/CompanyRegisterDto'
-import { ElForm } from 'element-ui/types/form';
-import Http from '@/utils/http';
+import { ElForm } from 'element-ui/types/form'
+import Http from '@/utils/http'
 
 @Component
 export default class Register1 extends Vue {
@@ -39,9 +40,9 @@ export default class Register1 extends Vue {
     private nextStep() {
         this.$router.push('/register/step2')
     }
-    private validateCompany(rule: any, value: any, callback: any) {
+    private validateCompany(rule: any, value: string, callback: any) {
         // value = value.trim()
-        const regex = new RegExp(/^[A-Za-z0-9]\w*[A-Za-z0-9]$/)
+        const regex = new RegExp(/^[A-Za-z0-9]\w*[A-Za-z0-9]$/, 'g')
         if (value === '') {
             callback(new Error('请输入公司英文简称'))
         } else if (value.length > 20) {
@@ -49,22 +50,17 @@ export default class Register1 extends Vue {
         } else if (!regex.test(value)) {
             callback(new Error('公司英文简称只能包含数字和字母，在中间可以使用下划线'))
         } else {
-            Http.Get(Http.hosturl + '/api/user/company/' + value)
+            Http.Get(Http.hosturl + '/api/company/exist/' + value)
                 .then((res) => {
-                    callback(new Error('该简称已被占用'))
+                    if (res.data === true) {
+                        callback(new Error('该简称已被占用'))
+                    } else {
+                        callback()
+                    }
                 })
                 .catch((err) => {
-                    if (err.response) {
-                        if (err.response.status === 404) {
-                            callback()
-                        } else {
-                            console.error(err)
-                            callback(new Error('与服务器通信时出错'))
-                        }
-                    } else {
-                        console.error(err)
-                        callback(new Error('与服务器通信时出错'))
-                    }
+                    console.error(err)
+                    callback(new Error('与服务器通信时出错'))
                 })
         }
     }
@@ -96,7 +92,7 @@ export default class Register1 extends Vue {
 .description {
   float: left;
   margin-left: 110px;
-  font-size: 14px;
+  font-size: 13px;
   text-align: left;
 }
 .button-panel {

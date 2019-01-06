@@ -11,8 +11,8 @@
                         <el-step title="完成"></el-step>
                     </el-steps>
                 </div>
-                <div class="register-board">
-                    <router-view :register-data="registerData"></router-view>
+                <div class="register-container">
+                    <router-view :register-data="registerData" @set-step="setStep"></router-view>
                 </div>
             </div>
         </div>
@@ -28,6 +28,9 @@ import CompanyRegisterDto from '@/types/CompanyRegisterDto'
 export default class CompanyRegister extends Vue {
     private activestep = 1
     private registerData = new CompanyRegisterDto()
+    private setStep(value: number) {
+        this.activestep = value
+    }
 }
 </script>
 
@@ -70,7 +73,7 @@ export default class CompanyRegister extends Vue {
 .register-indicator {
   flex: 1;
 }
-.register-board {
+.register-container {
   height: 550px;
   width: 600px;
   background-color: #ffffff;
