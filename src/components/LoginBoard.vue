@@ -36,6 +36,7 @@ import { ElInput } from 'element-ui/types/input'
 import Cookie from '@/utils/cookie'
 import Http from '@/utils/http'
 import LoginDto from '@/types/LoginDto'
+import Utils from '@/utils/utils'
 
 @Component
 export default class LoginBoard extends Vue {
@@ -61,33 +62,7 @@ export default class LoginBoard extends Vue {
     private submitForm(formname: string) {
         (this.$refs[formname] as ElForm).validate((valid) => {
             if (valid) {
-                this.isLogingin = true
-                Http.Post(this.loginurl, this.logindata)
-                    .then((res) => {
-                        Cookie.set('Authorization', res.data, 0)
-                        if (this.rememberMe) {
-                            const login = new LoginDto()
-                            login.userName = escape(this.logindata.userName)
-                            login.password = escape(this.logindata.password)
-                            Cookie.encryptSet('Login', escape(JSON.stringify(login)), 30)
-                        }
-                        const from = this.$route.query.redirect
-                        if (typeof (from) === 'string' && from !== '') {
-                            this.$router.push(from)
-                        } else {
-                            this.$router.push(this.successurl)
-                        }
-                    })
-                    .catch((err) => {
-                        if (err.response) {
-                            if (err.response.status === 400) {
-                                this.loginValid = false
-                            }
-                        }
-                    })
-                    .finally(() => {
-                        this.isLogingin = false
-                    })
+                this.doLoginEncrypt(this.logindata)
             }
         })
     }
@@ -102,6 +77,59 @@ export default class LoginBoard extends Vue {
         } else {
             callback(new Error('用户名或密码错误'))
         }
+    }
+    private doLogin(logindata: LoginDto) {
+        this.isLogingin = true
+        Http.Post(this.loginurl, logindata)
+            .then((res) => {
+                Cookie.set('Authorization', res.data, 0)
+                if (this.rememberMe) {
+                    Cookie.encryptSet('Login', JSON.stringify(logindata), 30)
+                }
+                const from = this.$route.query.redirect
+                if (typeof (from) === 'string' && from !== '') {
+                    this.$router.push(from)
+                } else {
+                    this.$router.push(this.successurl)
+                }
+            })
+            .catch((err) => {
+                if (err.response) {
+                    if (err.response.status === 400) {
+                        this.loginValid = false
+                    }
+                }
+            })
+            .finally(() => {
+                this.isLogingin = false
+            })
+    }
+    private doLoginEncrypt(logindata: LoginDto) {
+        this.isLogingin = true
+        const ciphertext = Utils.encryptString(JSON.stringify(logindata), Utils.serverkey)
+        this.$axios.post(Http.hosturl + '/api/Token/encrypt', { ciphertext })
+            .then((res) => {
+                Cookie.set('Authorization', res.data, 0)
+                if (this.rememberMe) {
+                    Cookie.encryptSet('Login', JSON.stringify(logindata), 30)
+                }
+                const from = this.$route.query.redirect
+                if (typeof (from) === 'string' && from !== '') {
+                    this.$router.push(from)
+                } else {
+                    this.$router.push(this.successurl)
+                }
+            })
+            .catch((err) => {
+                if (err.response) {
+                    if (err.response.status === 400) {
+                        this.loginValid = false
+                    }
+                }
+            })
+            .finally(() => {
+                this.isLogingin = false
+            })
     }
     private onEyePress(e: MouseEvent) {
         if (e.buttons === 1) {
@@ -131,6 +159,14 @@ export default class LoginBoard extends Vue {
     private onPasswordEnter(e: KeyboardEvent) {
         (this.$refs.passwordinput as ElInput).blur()
         this.submitForm('loginform')
+    }
+    private mounted() {
+        const logincookie = Cookie.decryptGet('Login')
+        if (logincookie) {
+            this.logindata = JSON.parse(logincookie)
+            this.rememberMe = true
+            this.doLoginEncrypt(this.logindata)
+        }
     }
 }
 </script>

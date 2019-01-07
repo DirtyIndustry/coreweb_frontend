@@ -27,7 +27,7 @@ function delCookie(name: string) {
   }
 }
 const setEncryptedCookie = (name: string, value: string, days: number) => {
-  const ciphertext = utils.getCipherTextOfString(value, utils.cookiekey)
+  const ciphertext = utils.encryptString(value, utils.cookiekey)
   setCookie(name, ciphertext, days)
 }
 const getDecryptedCookie = (name: string) => {
@@ -35,7 +35,7 @@ const getDecryptedCookie = (name: string) => {
   if (ciphertext === null) {
     return null
   } else {
-    return utils.getDecryptedText(ciphertext, utils.cookiekey)
+    return utils.decryptString(ciphertext, utils.cookiekey)
   }
 }
 class Cookie {

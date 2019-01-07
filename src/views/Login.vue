@@ -5,9 +5,7 @@
         <div class="content">
             <div class="content-inner">
                 <div class="center-panel"></div>
-                <LoginBoard :loginurl="loginurl"
-                            :successurl="successurl"
-                            :registerurl="registerurl"></LoginBoard>
+                <LoginBoard :loginurl="loginurl" :successurl="successurl" :registerurl="registerurl"></LoginBoard>
             </div>
         </div>
         <div class="footer"></div>
@@ -31,11 +29,6 @@ export default class Login extends Vue {
     private successurl = '/home'
     private registerurl = '/register'
     private findpasswordurl = '/findpassword'
-    private mounted() {
-        // Cookie.set('trycookie', 'cookievalue', 0)
-        // console.log(Cookie.get('trycookie'))
-        // Cookie.del('trycookie')
-    }
 }
 </script>
 

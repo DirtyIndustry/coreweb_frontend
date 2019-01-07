@@ -9,15 +9,6 @@ import cookie from './utils/cookie'
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
-  // if (to.path === '/login') {
-  //   if (cookie.get('Authorization') !== null) {
-  //     window.document.title = '首页'
-  //     next('/home')
-  //   } else {
-  //     window.document.title = to.meta.title
-  //     next()
-  //   }
-  // } else
   if (to.meta.requireToken === true) {
     if (cookie.get('Authorization') === null) {
       window.document.title = '登录'

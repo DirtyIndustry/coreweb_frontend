@@ -1,7 +1,7 @@
 import Axios, { AxiosRequestConfig, AxiosPromise, AxiosResponse } from 'axios'
 import router from '@/router'
 import Cookie from './cookie'
-import LoginDto from '@/types/LoginDto'
+import utils from './utils'
 
 const config = {
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
@@ -34,21 +34,19 @@ axios.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-const ReLogin = () => {
+const ReLogin = (): Promise<AxiosResponse> => {
   return new Promise((resolve, reject) => {
     Cookie.del('Authorization')
     const logincookie = Cookie.decryptGet('Login')
     if (logincookie === null) {
       RedirectToLogin()
     } else {
-      const logindto: LoginDto = JSON.parse(unescape(logincookie))
-      logindto.userName = unescape(logindto.userName)
-      logindto.password = unescape(logindto.password)
+      const ciphertext = utils.encryptString(logincookie, utils.serverkey)
       axios
-        .post(hosturl + '/api/token', logindto)
+        .post(hosturl + '/api/token/encrypt', { ciphertext })
         .then((respost) => {
           Cookie.set('Authorization', respost.data, 0)
-          resolve()
+          resolve(respost)
         })
         .catch((errpost) => {
           RedirectToLogin()
@@ -59,10 +57,12 @@ const ReLogin = () => {
 }
 const RedirectToLogin = () => {
   Cookie.del('Login')
-  router.replace({
-    path: '/login',
-    query: { redirect: router.currentRoute.fullPath }
-  })
+  if (router.currentRoute.path !== '/login') {
+    router.replace({
+      path: '/login',
+      query: { redirect: router.currentRoute.fullPath }
+    })
+  }
 }
 const Execute = (
   action: (
@@ -163,6 +163,7 @@ class Http {
     data?: any,
     config?: AxiosRequestConfig | undefined
   ) => Promise<AxiosResponse>
+  public readonly ReLogin: () => Promise<AxiosResponse>
   constructor() {
     this.hosturl = hosturl
     this.Get = Get
@@ -170,6 +171,7 @@ class Http {
     this.Put = Put
     this.Patch = Patch
     this.Delete = Delete
+    this.ReLogin = ReLogin
   }
 }
 export default new Http()
