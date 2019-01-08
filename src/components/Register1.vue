@@ -22,13 +22,13 @@
 
 <script lang="ts">
 import { Component, Vue, Emit, Prop } from 'vue-property-decorator'
-import CompanyRegisterDto from '@/types/CompanyRegisterDto'
+import LoginCreateDto from '@/types/LoginCreateDto'
 import { ElForm } from 'element-ui/types/form'
 import Http from '@/utils/http'
 
 @Component
 export default class Register1 extends Vue {
-    @Prop({ default: () => new CompanyRegisterDto() }) private registerData!: CompanyRegisterDto
+    @Prop({ default: () => new LoginCreateDto() }) private registerData!: LoginCreateDto
     private rules = {
         companyName: [{ required: true, message: '请输入公司名称', trigger: 'blur' }],
         company: [{ validator: this.validateCompany, trigger: 'blur' }]

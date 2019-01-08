@@ -1,4 +1,4 @@
-export default class CompanyRegisterDto {
+export default class LoginCreateDto {
   [key: string]: string
   [index: number]: string
   public companyName: string

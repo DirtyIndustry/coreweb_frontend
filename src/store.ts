@@ -5,16 +5,16 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token: ''
+    loggedin: false
   },
   mutations: {
-    setToken(state, value) {
-      state.token = value
+    setloggedin(state, value: boolean) {
+      state.loggedin = value
     }
   },
   actions: {
-    setToken(context, value) {
-      context.commit('setToken', value)
+    setLoggedIn(context, value: boolean) {
+      context.commit('setloggedin', value)
     }
   }
 })

@@ -22,12 +22,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import CompanyRegisterDto from '@/types/CompanyRegisterDto'
+import LoginCreateDto from '@/types/LoginCreateDto'
 
 @Component
 export default class CompanyRegister extends Vue {
     private activestep = 1
-    private registerData = new CompanyRegisterDto()
+    private registerData = new LoginCreateDto()
     private setStep(value: number) {
         this.activestep = value
     }

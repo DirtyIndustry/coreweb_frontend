@@ -36,13 +36,13 @@
 
 <script lang="ts">
 import { Component, Vue, Emit, Prop } from 'vue-property-decorator'
-import CompanyRegisterDto from '@/types/CompanyRegisterDto'
+import LoginCreateDto from '@/types/LoginCreateDto'
 import { ElForm } from 'element-ui/types/form'
 import Http from '@/utils/http'
 
 @Component
 export default class Register2 extends Vue {
-    @Prop({ default: () => new CompanyRegisterDto() }) private registerData!: CompanyRegisterDto
+    @Prop({ default: () => new LoginCreateDto() }) private registerData!: LoginCreateDto
     private checkpass = ''
     private rules = {
         userName: [{ validator: this.validateUserName, trigger: 'blur' }],

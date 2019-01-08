@@ -41,12 +41,12 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
-import CompanyRegisterDto from '@/types/CompanyRegisterDto'
+import LoginCreateDto from '@/types/LoginCreateDto'
 import Http from '@/utils/http'
 
 @Component
 export default class Register3 extends Vue {
-    @Prop({ default: () => new CompanyRegisterDto() }) private registerData!: CompanyRegisterDto
+    @Prop({ default: () => new LoginCreateDto() }) private registerData!: LoginCreateDto
     private isSubmiting = false
     @Emit()
     private setStep() {
