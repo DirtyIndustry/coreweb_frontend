@@ -30,15 +30,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Emit, Watch } from 'vue-property-decorator'
+import { Component, Vue, Mixins, Prop, Emit, Watch } from 'vue-property-decorator'
 import { ElForm } from 'element-ui/types/form'
 import { ElInput } from 'element-ui/types/input'
+import GlobalProperties from '@/mixins/globalproperties'
 import Cookie from '@/utils/cookie'
 import Http from '@/utils/http'
-import LoginDto from '@/types/LoginDto'
 import Utils from '@/utils/utils'
+import LoginDto from '@/types/LoginDto'
+import UserInfoDto from '@/types/UserInfoDto'
 
-@Component
+@Component({
+    mixins: [GlobalProperties]
+})
 export default class LoginBoard extends Vue {
     @Prop({ default: '' }) private loginurl!: string
     @Prop({ default: '' }) private successurl!: string
@@ -86,12 +90,16 @@ export default class LoginBoard extends Vue {
                 if (this.rememberMe) {
                     Cookie.encryptSet('Login', JSON.stringify(logindata), 30)
                 }
-                const from = this.$route.query.redirect
-                if (typeof (from) === 'string' && from !== '') {
-                    this.$router.push(from)
-                } else {
-                    this.$router.push(this.successurl)
-                }
+                Http.Get(Http.hosturl + '/api/user/' + logindata.userName)
+                    .then((resget) => {
+                        this.loggedin = true
+                        this.myinfo = resget.data as UserInfoDto
+                        this.gotoSuccessUrl()
+                    })
+                    .catch((errget) => {
+                        this.loggedin = false
+                        this.myinfo = new UserInfoDto()
+                    })
             })
             .catch((err) => {
                 if (err.response) {
@@ -113,12 +121,16 @@ export default class LoginBoard extends Vue {
                 if (this.rememberMe) {
                     Cookie.encryptSet('Login', JSON.stringify(logindata), 30)
                 }
-                const from = this.$route.query.redirect
-                if (typeof (from) === 'string' && from !== '') {
-                    this.$router.push(from)
-                } else {
-                    this.$router.push(this.successurl)
-                }
+                Http.Get(Http.hosturl + '/api/user/' + logindata.userName)
+                    .then((resget) => {
+                        this.loggedin = true
+                        this.myinfo = resget.data as UserInfoDto
+                        this.gotoSuccessUrl()
+                    })
+                    .catch((errget) => {
+                        this.loggedin = false
+                        this.myinfo = new UserInfoDto()
+                    })
             })
             .catch((err) => {
                 if (err.response) {
@@ -130,6 +142,14 @@ export default class LoginBoard extends Vue {
             .finally(() => {
                 this.isLogingin = false
             })
+    }
+    private gotoSuccessUrl() {
+        const from = this.$route.query.redirect
+        if (typeof (from) === 'string' && from !== '') {
+            this.$router.push(from)
+        } else {
+            this.$router.push(this.successurl)
+        }
     }
     private onEyePress(e: MouseEvent) {
         if (e.buttons === 1) {

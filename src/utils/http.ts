@@ -1,7 +1,9 @@
 import Axios, { AxiosRequestConfig, AxiosPromise, AxiosResponse } from 'axios'
 import router from '@/router'
+import store from '@/store'
 import Cookie from './cookie'
 import utils from './utils'
+import UserInfoDto from '@/types/UserInfoDto'
 
 const config = {
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
@@ -46,7 +48,18 @@ const ReLogin = (): Promise<AxiosResponse> => {
         .post(hosturl + '/api/token/encrypt', { ciphertext })
         .then((respost) => {
           Cookie.set('Authorization', respost.data, 0)
-          resolve(respost)
+          axios
+            .get(hosturl + '/api/user/' + JSON.parse(logincookie).userName)
+            .then((resget) => {
+              store.dispatch('setLoggedIn', true)
+              store.dispatch('setMyInfo', resget.data as UserInfoDto)
+              resolve(respost)
+            })
+            .catch((errget) => {
+              store.dispatch('setLoggedIn', false)
+              store.dispatch('setMyInfo', new UserInfoDto())
+              reject(errget)
+            })
         })
         .catch((errpost) => {
           RedirectToLogin()
