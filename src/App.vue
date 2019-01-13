@@ -1,22 +1,25 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/home">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/login">Login</router-link>
+    <div id="app">
+        <HeaderBar></HeaderBar>
+        <div id="nav">
+            <router-link to="/home">Home</router-link> |
+            <router-link to="/about">About</router-link> |
+            <router-link to="/login">Login</router-link>
+        </div>
+        <router-view />
     </div>
-    <router-view/>
-  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import HelloWorld from './components/HelloWorld.vue'
+import HeaderBar from './components/HeaderBar.vue'
 
 @Component({
-  components: {
-    HelloWorld
-  }
+    components: {
+        HelloWorld,
+        HeaderBar
+    }
 })
 export default class App extends Vue {
 
