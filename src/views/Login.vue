@@ -1,6 +1,6 @@
 <template>
     <div class="page-body">
-        <div class="background-pic"></div>
+        <!-- <div class="background-pic"></div> -->
         <div class="header"></div>
         <div class="content">
             <div class="content-inner">

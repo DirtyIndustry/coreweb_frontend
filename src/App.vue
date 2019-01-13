@@ -1,28 +1,46 @@
 <template>
-    <div id="app">
-        <HeaderBar></HeaderBar>
-        <div id="nav">
+  <div id="app">
+    <!-- <div id="nav">
             <router-link to="/home">Home</router-link> |
             <router-link to="/about">About</router-link> |
             <router-link to="/login">Login</router-link>
-        </div>
-        <router-view />
-    </div>
+    </div>-->
+    <HeaderBarAlt></HeaderBarAlt>
+    <router-view/>
+  </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import HelloWorld from './components/HelloWorld.vue'
-import HeaderBar from './components/HeaderBar.vue'
+import { Component, Vue, Mixins } from 'vue-property-decorator'
+import GlobalProperties from '@/mixins/globalproperties'
+import HelloWorld from '@/components/HelloWorld.vue'
+import HeaderBarAlt from '@/components/HeaderBarAlt.vue'
+import cookie from '@/utils/cookie'
+import http from '@/utils/http'
+import UserInfoDto from '@/types/UserInfoDto'
 
 @Component({
-    components: {
-        HelloWorld,
-        HeaderBar
-    }
+  components: {
+    HelloWorld,
+    HeaderBarAlt
+  },
+  mixins: [GlobalProperties]
 })
 export default class App extends Vue {
-
+  private created() {
+    if (cookie.get('Authorization') !== null) {
+      http
+        .Get(http.hosturl + '/api/user/me')
+        .then((res) => {
+          this.loggedin = true
+          this.myinfo = res.data as UserInfoDto
+        })
+        .catch((err) => {
+          this.loggedin = false
+          this.myinfo = new UserInfoDto()
+        })
+    }
+  }
 }
 </script>
 

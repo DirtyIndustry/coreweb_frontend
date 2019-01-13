@@ -1,72 +1,82 @@
 <template>
-    <div class="HeaderBar">
-        <router-link class="logo" to="/home">
-            <img class="logo-img" src="logo.png" alt="">
-        </router-link>
-        <div class="header">
-            <div class="header-top clearfix">
-                <div class="header-top-social">
-                    <p class="header-top-tagline">
-                        <span>Inspiring Creativity</span>
-                    </p>
-                    <ul class="header-top-social-list">
-                        <li>
-                            <a class="header-top-social-list-a" href="https://www.facebook.com">
-                                <span class="u-vis-hide">Find us on Facebook</span>
-                                <span class="icon fab fa-facebook-square"></span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="header-top-social-list-a" href="https://www.twitter.com">
-                                <span class="u-vis-hide">Find us on Twitter</span>
-                                <span class="icon fab fa-twitter-square"></span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="header-top-social-list-a" href="https://www.pinterest.com">
-                                <span class="u-vis-hide">Find us on Pinterest</span>
-                                <span class="icon fab fa-pinterest-square"></span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="header-top-social-list-a" href="https://www.linkedin.com">
-                                <span class="u-vis-hide">Find us on Linkedin</span>
-                                <span class="icon fab fa-linkedin"></span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="header-top-search"></div>
-                <ul class="header-top-nav">
-                    <li>
-                        <router-link class="is-active" to="/home">Home</router-link>
-                    </li>
-                    <li></li>
-                    <li>
-                        <router-link class="nav-link" to="/about">Contact Us</router-link>
-                    </li>
-                    <li>
-                        <router-link class="nav-link" to="/register">Become a Member</router-link>
-                    </li>
-
-                    <router-link class="login-link" to="/login">Member Login</router-link>
-
-                </ul>
-            </div>
+  <div class="HeaderBar">
+    <router-link class="logo" to="/home">
+      <img class="logo-img" src="logo.png" alt>
+      <img class="logo-img2" src="logo2.png" alt>
+    </router-link>
+    <div class="header">
+      <div class="header-top clearfix">
+        <div class="header-top-social">
+          <p class="header-top-tagline">
+            <span>Inspiring Creativity</span>
+          </p>
+          <ul class="header-top-social-list">
+            <li>
+              <a class="header-top-social-list-a" href="https://www.facebook.com">
+                <span class="u-vis-hide">Find us on Facebook</span>
+                <span class="icon fab fa-facebook-square"></span>
+              </a>
+            </li>
+            <li>
+              <a class="header-top-social-list-a" href="https://www.twitter.com">
+                <span class="u-vis-hide">Find us on Twitter</span>
+                <span class="icon fab fa-twitter-square"></span>
+              </a>
+            </li>
+            <li>
+              <a class="header-top-social-list-a" href="https://www.pinterest.com">
+                <span class="u-vis-hide">Find us on Pinterest</span>
+                <span class="icon fab fa-pinterest-square"></span>
+              </a>
+            </li>
+            <li>
+              <a class="header-top-social-list-a" href="https://www.linkedin.com">
+                <span class="u-vis-hide">Find us on Linkedin</span>
+                <span class="icon fab fa-linkedin"></span>
+              </a>
+            </li>
+          </ul>
         </div>
+        <div class="header-top-search"></div>
+        <ul v-if="!loggedin" class="header-top-nav">
+          <li>
+            <router-link class="is-active" to="/home">Home</router-link>
+          </li>
+          <li></li>
+          <li>
+            <router-link class="nav-link" to="/about">Contact Us</router-link>
+          </li>
+          <li>
+            <router-link class="nav-link" to="/register">Become a Member</router-link>
+          </li>
+
+          <router-link class="login-link" to="/login">Member Login</router-link>
+        </ul>
+
+        <div v-if="loggedin">
+          
+          <router-link class="login-link" to="/login">{{myinfo.userName}}</router-link>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Mixins, Prop, Emit, Watch } from 'vue-property-decorator'
+import {
+  Component,
+  Vue,
+  Mixins,
+  Prop,
+  Emit,
+  Watch
+} from 'vue-property-decorator'
 import GlobalProperties from '@/mixins/globalproperties'
 
 @Component({
-    mixins: [GlobalProperties]
+  mixins: [GlobalProperties]
 })
-export default class HeaderBar extends Vue {
-
-}
+export default class HeaderBar extends Vue {}
 </script>
 
 <style scoped>
@@ -74,15 +84,16 @@ export default class HeaderBar extends Vue {
 
 .HeaderBar {
   width: 100%;
+  min-width: 1000px;
   height: 140px;
   position: fixed;
   top: 0;
   left: 0;
   padding-left: 150px;
-  background-color: #fff;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 5px 0px;
   display: block;
   color: #707070;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 *,
 ::after,
@@ -95,22 +106,36 @@ export default class HeaderBar extends Vue {
   left: 0;
   width: 150px;
   height: 100%;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 5px 0px;
   border-right: 1px solid #f1f1f1;
 }
 .logo-img {
+  position: absolute;
+  top: 0;
+  left: 5px;
   width: 140px;
   height: 140px;
-  margin: 0 auto;
-  -webkit-transition: opacity 0.2s ease-in-out;
-  transition: opacity 0.2s ease-in-out;
+  background-color: #fff;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  z-index: 5;
 }
-.logo-img:hover {
-  opacity: 0.7;
+.logo-img2 {
+  position: absolute;
+  top: 0;
+  left: 5px;
+  width: 140px;
+  height: 140px;
+  background-color: #fff;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 .header-top {
   height: 50px;
   width: 100%;
   background-color: #1f1f21;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 5px 0px;
   display: block;
 }
 .clearfix::after {
@@ -214,7 +239,7 @@ export default class HeaderBar extends Vue {
   font-style: normal;
   color: #fff;
   height: 50px;
-  width: auto;
+  /* width: auto; */
   float: right;
   font-family: 'Calibri-Bold', 'HelveticaNeue-Light', 'Helvetica Neue Light',
     'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
@@ -251,5 +276,41 @@ export default class HeaderBar extends Vue {
 }
 .login-link:hover {
   background-color: #707070;
+}
+@media only screen and (min-width: 1140px) {
+  .logo-img2 {
+    opacity: 0;
+  }
+  .logo-img:hover {
+    opacity: 0.7;
+  }
+}
+
+@media only screen and (max-width: 1139px) {
+  .HeaderBar {
+    padding-left: 50px;
+  }
+  .header-top-tagline {
+    display: none;
+  }
+  .logo {
+    width: 50px;
+    height: 50px;
+  }
+  .logo-img {
+    opacity: 0;
+    width: 50px;
+    height: 50px;
+    left: 0;
+  }
+  .logo-img2 {
+    opacity: 1;
+    width: 50px;
+    height: 50px;
+    left: 0;
+  }
+  .logo-img:hover {
+    opacity: 1;
+  }
 }
 </style>

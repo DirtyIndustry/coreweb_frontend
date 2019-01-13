@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Mixins, Prop, Emit, Watch } from 'vue-property-decorator'
+import { Component, Vue, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { ElForm } from 'element-ui/types/form'
 import { ElInput } from 'element-ui/types/input'
 import GlobalProperties from '@/mixins/globalproperties'

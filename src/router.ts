@@ -16,7 +16,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/login'
+      redirect: '/home'
     },
     {
       path: '/login',
@@ -35,7 +35,7 @@ export default new Router({
       component: Home,
       meta: {
         title: '首页',
-        requireToken: true
+        requireToken: undefined
       }
     },
     {
