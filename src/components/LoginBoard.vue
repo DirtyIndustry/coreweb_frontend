@@ -90,16 +90,23 @@ export default class LoginBoard extends Vue {
                 if (this.rememberMe) {
                     Cookie.encryptSet('Login', JSON.stringify(logindata), 30)
                 }
-                Http.Get(Http.hosturl + '/api/user/' + logindata.userName)
-                    .then((resget) => {
-                        this.loggedin = true
-                        this.myinfo = resget.data as UserInfoDto
-                        this.gotoSuccessUrl()
-                    })
-                    .catch((errget) => {
-                        this.loggedin = false
-                        this.myinfo = new UserInfoDto()
-                    })
+                Http.getUserInfo()
+                .then((resget) => {
+                    this.gotoSuccessUrl()
+                })
+                .catch((errget) => {
+                    // console.error(errget)
+                })
+                // Http.Get(Http.hosturl + '/api/user/' + logindata.userName)
+                //     .then((resget) => {
+                //         this.loggedin = true
+                //         this.myinfo = resget.data as UserInfoDto
+                //         this.gotoSuccessUrl()
+                //     })
+                //     .catch((errget) => {
+                //         this.loggedin = false
+                //         this.myinfo = new UserInfoDto()
+                //     })
             })
             .catch((err) => {
                 if (err.response) {
@@ -121,16 +128,23 @@ export default class LoginBoard extends Vue {
                 if (this.rememberMe) {
                     Cookie.encryptSet('Login', JSON.stringify(logindata), 30)
                 }
-                Http.Get(Http.hosturl + '/api/user/' + logindata.userName)
-                    .then((resget) => {
-                        this.loggedin = true
-                        this.myinfo = resget.data as UserInfoDto
-                        this.gotoSuccessUrl()
-                    })
-                    .catch((errget) => {
-                        this.loggedin = false
-                        this.myinfo = new UserInfoDto()
-                    })
+                // Http.Get(Http.hosturl + '/api/user/' + logindata.userName)
+                //     .then((resget) => {
+                //         this.loggedin = true
+                //         this.myinfo = resget.data as UserInfoDto
+                //         this.gotoSuccessUrl()
+                //     })
+                //     .catch((errget) => {
+                //         this.loggedin = false
+                //         this.myinfo = new UserInfoDto()
+                //     })
+                Http.getUserInfo()
+                .then((resget) => {
+                    this.gotoSuccessUrl()
+                })
+                .catch((errget) => {
+                    // console.error(errget)
+                })
             })
             .catch((err) => {
                 if (err.response) {

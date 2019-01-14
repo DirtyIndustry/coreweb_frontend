@@ -28,18 +28,7 @@ import UserInfoDto from '@/types/UserInfoDto'
 })
 export default class App extends Vue {
   private created() {
-    if (cookie.get('Authorization') !== null) {
-      http
-        .Get(http.hosturl + '/api/user/me')
-        .then((res) => {
-          this.loggedin = true
-          this.myinfo = res.data as UserInfoDto
-        })
-        .catch((err) => {
-          this.loggedin = false
-          this.myinfo = new UserInfoDto()
-        })
-    }
+    http.getUserInfo()
   }
 }
 </script>

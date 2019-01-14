@@ -50,14 +50,13 @@ export default class HeaderBar extends Vue {
   get thisShowIcon() {
     if (this.menuItems) {
       let allEmpty = true
-      for (let i = 0; i < this.menuItems.length; i++) {
-        if (this.menuItems[i].prefix !== '') {
+      for (const item of this.menuItems) {
+        if (item.prefix !== '') {
           allEmpty = false
           break
         }
       }
       if (allEmpty) {
-        console.log(allEmpty)
         return false
       }
     }
@@ -69,8 +68,8 @@ export default class HeaderBar extends Vue {
     }
   }
   @Emit()
-  private itemClick(e: number) {
-    return e
+  private itemClick(index: number) {
+    return index
   }
   private toggleShow() {
     this.menuShow = !this.menuShow

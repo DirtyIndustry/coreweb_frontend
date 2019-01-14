@@ -4,6 +4,7 @@ import store from '@/store'
 import Cookie from './cookie'
 import utils from './utils'
 import UserInfoDto from '@/types/UserInfoDto'
+import cookie from './cookie'
 
 const config = {
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
@@ -48,16 +49,11 @@ const ReLogin = (): Promise<AxiosResponse> => {
         .post(hosturl + '/api/token/encrypt', { ciphertext })
         .then((respost) => {
           Cookie.set('Authorization', respost.data, 0)
-          axios
-            .get(hosturl + '/api/user/' + JSON.parse(logincookie).userName)
+          getUserInfo()
             .then((resget) => {
-              store.dispatch('setLoggedIn', true)
-              store.dispatch('setMyInfo', resget.data as UserInfoDto)
               resolve(respost)
             })
             .catch((errget) => {
-              store.dispatch('setLoggedIn', false)
-              store.dispatch('setMyInfo', new UserInfoDto())
               reject(errget)
             })
         })
@@ -70,19 +66,53 @@ const ReLogin = (): Promise<AxiosResponse> => {
 }
 const RedirectToLogin = () => {
   Cookie.del('Login')
+  utils.cleanLoginStatus()
   if (router.currentRoute.path !== '/login') {
     router.replace({
       path: '/login',
-      query: { redirect: router.currentRoute.fullPath }
+      query: { redirect: router.currentRoute.fullPath },
     })
   }
 }
+const getUserInfo = (): Promise<AxiosResponse> => {
+  return new Promise((resolve, reject) => {
+    Get(hosturl + '/api/user/me')
+      .then((res) => {
+        utils.saveLoginStatus(res.data as UserInfoDto)
+        resolve(res)
+      })
+      .catch((err) => {
+        cookie.del('Authorization')
+        cookie.del('Login')
+        utils.cleanLoginStatus()
+        reject(err)
+      })
+  })
+}
+const logout = (): Promise<AxiosResponse> => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(hosturl + '/api/token')
+      .then((res) => {
+        cookie.del('Authorization')
+        cookie.del('Login')
+        utils.cleanLoginStatus()
+        router.push('/login')
+        resolve(res)
+      })
+      .catch((err) => {
+        if (err.response.status === 401 || err.response.status === 403) {
+          cookie.del('Authorization')
+          cookie.del('Login')
+          utils.cleanLoginStatus()
+          router.push('/login')
+        }
+        reject(err)
+      })
+  })
+}
 const Execute = (
-  action: (
-    url: string,
-    data?: any,
-    config?: AxiosRequestConfig | undefined
-  ) => AxiosPromise<any>,
+  action: (url: string, data?: any, config?: AxiosRequestConfig | undefined) => AxiosPromise<any>,
   url: string,
   data?: any,
   configure?: AxiosRequestConfig | undefined
@@ -125,25 +155,13 @@ const hosturl = 'http://localhost:2619'
 const Get = (url: string, configure?: AxiosRequestConfig | undefined) => {
   return Execute(axios.get, url, configure)
 }
-const Post = (
-  url: string,
-  data?: any,
-  configure?: AxiosRequestConfig | undefined
-) => {
+const Post = (url: string, data?: any, configure?: AxiosRequestConfig | undefined) => {
   return Execute(axios.post, url, data, configure)
 }
-const Put = (
-  url: string,
-  data?: any,
-  configure?: AxiosRequestConfig | undefined
-) => {
+const Put = (url: string, data?: any, configure?: AxiosRequestConfig | undefined) => {
   return Execute(axios.put, url, data, configure)
 }
-const Patch = (
-  url: string,
-  data?: any,
-  configure?: AxiosRequestConfig | undefined
-) => {
+const Patch = (url: string, data?: any, configure?: AxiosRequestConfig | undefined) => {
   return Execute(axios.patch, url, data, configure)
 }
 const Delete = (url: string, configure?: AxiosRequestConfig | undefined) => {
@@ -152,31 +170,14 @@ const Delete = (url: string, configure?: AxiosRequestConfig | undefined) => {
 
 class Http {
   public readonly hosturl: string
-  public readonly Get: (
-    url: string,
-    config?: AxiosRequestConfig | undefined
-  ) => Promise<AxiosResponse>
-  public readonly Post: (
-    url: string,
-    data?: any,
-    config?: AxiosRequestConfig | undefined
-  ) => Promise<AxiosResponse>
-  public readonly Put: (
-    url: string,
-    data?: any,
-    config?: AxiosRequestConfig | undefined
-  ) => Promise<AxiosResponse>
-  public readonly Patch: (
-    url: string,
-    data?: any,
-    config?: AxiosRequestConfig | undefined
-  ) => Promise<AxiosResponse>
-  public readonly Delete: (
-    url: string,
-    data?: any,
-    config?: AxiosRequestConfig | undefined
-  ) => Promise<AxiosResponse>
+  public readonly Get: (url: string, config?: AxiosRequestConfig | undefined) => Promise<AxiosResponse>
+  public readonly Post: (url: string, data?: any, config?: AxiosRequestConfig | undefined) => Promise<AxiosResponse>
+  public readonly Put: (url: string, data?: any, config?: AxiosRequestConfig | undefined) => Promise<AxiosResponse>
+  public readonly Patch: (url: string, data?: any, config?: AxiosRequestConfig | undefined) => Promise<AxiosResponse>
+  public readonly Delete: (url: string, data?: any, config?: AxiosRequestConfig | undefined) => Promise<AxiosResponse>
   public readonly ReLogin: () => Promise<AxiosResponse>
+  public readonly getUserInfo: () => Promise<AxiosResponse>
+  public readonly logout: () => Promise<AxiosResponse>
   constructor() {
     this.hosturl = hosturl
     this.Get = Get
@@ -185,6 +186,8 @@ class Http {
     this.Patch = Patch
     this.Delete = Delete
     this.ReLogin = ReLogin
+    this.getUserInfo = getUserInfo
+    this.logout = logout
   }
 }
 export default new Http()

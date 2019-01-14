@@ -10,6 +10,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Http from '@/utils/http'
 import cookie from '@/utils/cookie'
+import utils from '@/utils/utils'
 
 @Component
 export default class About extends Vue {
@@ -31,6 +32,7 @@ export default class About extends Vue {
       console.log(res)
       cookie.del('Authorization')
       cookie.del('Login')
+      utils.cleanLoginStatus()
       this.$router.replace('/login')
     })
     .catch((err) => {

@@ -65,46 +65,40 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Vue,
-  Mixins,
-  Prop,
-  Emit,
-  Watch
-} from 'vue-property-decorator'
+import { Component, Vue, Mixins, Prop, Emit, Watch } from 'vue-property-decorator'
 import GlobalProperties from '@/mixins/globalproperties'
 import MenuButton from '@/components/MenuButton.vue'
+import http from '@/utils/http'
 
 @Component({
   components: {
-    MenuButton
+    MenuButton,
   },
-  mixins: [GlobalProperties]
+  mixins: [GlobalProperties],
 })
 export default class HeaderBar extends Vue {
   private menuItems = [
     {
       textlabel: 'User Infos',
       separator: false,
-      prefix: `<i class="fa fa-user"></i>`
+      prefix: `<i class="fa fa-user"></i>`,
     },
     {
       textlabel: 'Change Password',
       separator: false,
-      prefix: `<i class="fa fa-user"></i>`
+      prefix: `<i class="fa fa-user"></i>`,
     },
     {
       textlabel: 'Message Box',
       separator: false,
-      prefix: `<i class="fa fa-user"></i>`
+      prefix: `<i class="fa fa-user"></i>`,
     },
     { textlabel: '', separator: true },
     {
       textlabel: 'Logout',
       separator: false,
-      prefix: `<i class="fa fa-user"></i>`
-    }
+      prefix: `<i class="fa fa-user"></i>`,
+    },
   ]
   get userName() {
     if (this.myinfo.userName) {
@@ -114,6 +108,13 @@ export default class HeaderBar extends Vue {
   }
   private onDropdownMenuItemClick(e: number) {
     console.log('下拉菜单中的第' + e + '项点击了')
+    switch (e) {
+      case 4:
+        http.logout()
+        break
+      default:
+        break
+    }
   }
 }
 </script>
